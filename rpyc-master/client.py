@@ -81,27 +81,27 @@ while True:
     if(cl.message == 1):
         print('sending message 2')
         time.sleep(3)
-        cl.ap.exposed_sendMessage2(cl.message, 'message2')
+        cl.ap.exposed_sendMessage2(cl.message, 'SNonce: 8737282, MIC: 7382888')
         time.sleep(3)
     if(cl.message == 3):
         print('sending message 4')
         time.sleep(3)
-        cl.ap.exposed_sendMessage4(cl.message, 'message4')
+        cl.ap.exposed_sendMessage4(cl.message, 'all good fam, handshake complete')
         time.sleep(3)
         cl.message = 5
     if(cl.message == 5):
         print('sending message 5')
         time.sleep(3)
-        cl.ap.exposed_sendMessage5(cl.message, 'message5')
+        cl.ap.exposed_sendMessage5(cl.message, 'c7041f44d10f1801d4e081c61dee4cbf32090d0f90f5420cc554')
         time.sleep(3)
         cl.message = 6
     if(cl.message == 6):
         print('sending message 6')
         time.sleep(3)
         if (cl.reset == False):
-            cl.ap.exposed_sendMessage6(cl.message, 'message6')
+            cl.ap.exposed_sendMessage6(cl.message, '3315ed233f9899c261290d436107a2b73dd834517c1540044f3c')
         else:
-            cl.ap.exposed_sendMessage6(cl.message, 'reset key')
+            cl.ap.exposed_sendMessage6(cl.message, 'c7041f44d10f1801cff98bc054e21fa43b05054adff40c55c744')
         print('Communications done')
         break
     

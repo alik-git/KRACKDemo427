@@ -86,18 +86,18 @@ while True:
     if(ap.message == 1):
         print('sending message 1')
         time.sleep(3)
-        ap.cl.exposed_sendMessage1(ap.message, 'message1')
+        ap.cl.exposed_sendMessage1(ap.message, 'ANonce: 1235571')
         time.sleep(3)
     if(ap.message == 3):
         if (ap.m3sent == False):
             print('sending message 3')
             time.sleep(3)
-            ap.cl.exposed_sendMessage3(ap.message, 'message3')
+            ap.cl.exposed_sendMessage3(ap.message, 'GTK: 8569285, MIAC: 5468778')
             time.sleep(3)
         else:
             print('sending message 3 again...')
             time.sleep(3)
-            ap.cl.exposed_sendMessage3(ap.message, 'message3')
+            ap.cl.exposed_sendMessage3(ap.message, 'GTK: 8569285, MIAC: 5468778')
             time.sleep(3)
     if(ap.message == 4):
         pass

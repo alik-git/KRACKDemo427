@@ -1,38 +1,66 @@
-import rpyc
-conn = rpyc.connect("localhost", 18813)
-c = conn.root
-c.exposed_hijack()
+KRACK Tutorial by Ali and Jacob
 
-You are going to intercept communications bebtween a router and client (man in the middle)
+In this tutorial you are going to intercept communications between a router and
+client (man in the middle attack) and decrypt the sent messages.
 
-Open 2 terminals
+PART 1: INTERCEPT COMMUNICATIONS AND FORCE KEY RE-INSTALL
 
-run ap.py then client.py each in their own terminal
+Definitions:
+Router = Authenticator = Access Point = AP = ap = ap.py
+Client = Supplicant = cl = client.py 
+Man in the middle = MIM = You = mim = mim.py
 
-See how the 4-way handshake is done.
+SETUP:
+    Open a new terminal and run ap.py
+    Open a new terminal and run client.py
 
-Open 2 more terminals. run mim.py in one.  This is the eyes of the man in the middle
+Press enter in client.py to initiate the handshake.
+Observe the 4-way handshake between the two processes
 
-On the second terminal, after client.py is running, open a python shell
-and run:
+This is where you come in.
+Now, before initiating the handshake, open a new terminal and run mim.py
+mim.py can jam communications, it does this by pretending to be the router and
+connecting to the client. Then the client will send its messages to mim.py.
+NOTE: ap.py will still continue sending messages to the client as if nothing has
+changed.
 
-import rpyc
-conn = rpyc.connect("localhost", 18813)
-c = conn.root
+To jam the communications through mim:
+   Make sure SETUP is done
+   Make sure mim.py is running in its own terminal
+   Open a new terminal
+   Open a python shell (type python)
+   run the following:
+   import rpyc
+   conn = rpyc.connect("localhost", 18813)
+   c = conn.root
+   Now you can initiate the handshake in client.py
+   During the handshake, run 'c.exposed_hijack()' in the Python shell to hijack
+   the communications
+   
+Use this to force the client to do a key-reinstall
+If done corrently, this will cause the client to encrypt both its messages with
+the same key.
 
+Once you have succeeded, copy both the ciphertexts(encrypted with the same key)
+and move on to PART 2.
 
-at any point during the handshake, 
+PART 2: CRIB DRAGGING
 
-type c.exposed_hijack() to hijack communications
-so the client sends his messages to the man in the middle instead
-*note: the client will still receive messages from the router, but wont send any*
+First xor the two ciphertexts using xorstrings.py
+Open a new terminal and run:
+script screen.log
+python xorstrings.py ciphertext1 ciphertext2
 
-Using your knowledge of the KRACK attack, force the client to reuse its encryption key
-to get some easily decrypted string
+Once you have the xor'd-ciphertext, cribdrag it using cribdrag.py
+In the same terminal run:
+python cribdrag.py xor'd-ciphertext
+Follow the prompts and see if you can *krack* the code (haha see what I did there) 
+The basics:
+The crib is a word or phrase you think will be in the messages
+Go through the possible matches to see if a position makes sense
+If you get a match, enter the matched position and the messages will be updated.
+Rinse and repeat.
 
+Once you get the messages type 'exit' in the terminal, and submit script.log to
+UTORSubmit
 
-THEN
-
-open a 5th terminal.  you can close the rest.
-
-run xorstring.py and cribdrag.py to decrypt the messages.
