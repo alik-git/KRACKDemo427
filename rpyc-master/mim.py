@@ -9,7 +9,7 @@ from threading import Thread
 
 
 # Actual Access Point Logic
-class CL:
+class MIM:
     
     def __init__(self):
         self.messagesent = 0
@@ -20,6 +20,37 @@ class CL:
         self.MAC = '34-25-B8-1C-17-EB'
         self.apconn = None
         self.ap = None
+
+        self.message = 1
+        self.replayCounter = 0
+        self.ANonce = None
+        self.SNonce = None
+        self.MAC = '34-25-B8-1C-17-EA'
+        self.clconn = None
+        self.cl = None
+
+
+        
+
+
+    def sendMessage1(self):
+        self.message += 1
+        self.ANonce = random.randint(10000, 99999)
+        tmp = self.replayCounter
+        self.replayCounter += 1
+        return tmp, self.ANonce
+
+    def sendMessage3(self):
+        self.message += 1
+        tmp = self.replayCounter
+        self.replayCounter += 1
+        return 'message 3'
+
+    def connect_to_client(self):
+        self.clconn = rpyc.connect("localhost", 18813)
+        self.cl = self.clconn.root
+        self.message = 1
+        return "Connection established, ready to start 4 way handshake"
 
     def sendMessage2(self):
         self.messagesent = 2
@@ -43,6 +74,10 @@ class CL:
             return '3315ed233f9899c261290d436107a2b73dd834517c1540044f3c'
 
         return 'c7041f44d10f1801cff98bc054e21fa43b05054adff40c55c744'
+
+    def reinstallKey(self):
+        self.intercepted = True
+        return None
     
     def jamComs(self):
         self.jammed = True
@@ -65,55 +100,54 @@ class CLService(rpyc.Service):
 
     def exposed_reqMessage4(self):
         time.sleep(3)
-        print('4-way handshake complete')
         return cl.sendMessage4()
 
     def exposed_reqCom1(self):
-        print('Sending Encrypting Communication 1...')
         time.sleep(3)
-        return cl.sendCom1()
+        return cl.sendNextCom()
 
     def exposed_reqCom2(self):
-        print('Sending Encrypting Communication 2...')
         time.sleep(3)
-        return cl.sendCom2()
+        return cl.sendNextCom()
+
+    def exposed_reinstallKey(self):
+        return cl.reinstallKey()
 
     def exposed_jamComs(self):
         return cl.jamComs()
 
-    def exposed_unjamComs(self):
-        return cl.unjamComs()
+    def exposed_reqMessage1(self):
+        time.sleep(3)
+        return ap.sendMessage1()
+
+    def exposed_reqMessage3(self):
+        time.sleep(3)
+        return ap.sendMessage3()
+
+    def exposed_reqConnection(self):
+        time.sleep(3)
+        print("Connection established, ready to start 4 way handshake")
+        return ap.connect_to_client()
         
     
 # start the CLserver
-server = ThreadedServer(CLService, port = 18813)
+server = ThreadedServer(CLService, port = 18814)
 t = Thread(target = server.start)
 t.daemon = True
 t.start()
 
-cl = CL()
+mim = MIM()
 
-input('Initiate 4-way handshake? (y/y) ')
+input('Hijack all connections? (y/y)')
 cl.reqAPConnection()
 
 print('waiting for message 1')
 m1 = cl.ap.exposed_reqMessage1()
 print(m1)
 
-message3 = None
-
 while True:
     time.sleep(3)
-    if(cl.messagesent == 2):
-        cl.messagesent += 1
-        print('waiting for message 3')
-        m3 = cl.ap.exposed_reqMessage3()
-        print(m3)
-        # ON SECOND TIME
-        # self.intercepted = True
-    if(cl.messagesent == 6):
-        print('communication completed')
-        break
+    
 
 
     
