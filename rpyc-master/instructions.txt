@@ -1,0 +1,38 @@
+import rpyc
+conn = rpyc.connect("localhost", 18813)
+c = conn.root
+c.exposed_hijack()
+
+You are going to intercept communications bebtween a router and client (man in the middle)
+
+Open 2 terminals
+
+run ap.py then client.py each in their own terminal
+
+See how the 4-way handshake is done.
+
+Open 2 more terminals. run mim.py in one.  This is the eyes of the man in the middle
+
+On the second terminal, after client.py is running, open a python shell
+and run:
+
+import rpyc
+conn = rpyc.connect("localhost", 18813)
+c = conn.root
+
+
+at any point during the handshake, 
+
+type c.exposed_hijack() to hijack communications
+so the client sends his messages to the man in the middle instead
+*note: the client will still receive messages from the router, but wont send any*
+
+Using your knowledge of the KRACK attack, force the client to reuse its encryption key
+to get some easily decrypted string
+
+
+THEN
+
+open a 5th terminal.  you can close the rest.
+
+run xorstring.py and cribdrag.py to decrypt the messages.
