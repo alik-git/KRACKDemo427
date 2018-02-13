@@ -28,19 +28,21 @@ class AP:
     def getMessage2(self, mnum, message):
         self.m2 = message
         self.message = mnum + 2
+        print('Recieved Message 2:')
         print(self.m2)
 
     def getMessage4(self, mnum, message):
         self.m4 = message
         self.message = 4
+        print('Recieved Message 4:')
         print(self.m4)
 
     def getMessage5(self, mnum, message):
-        print('Encrypted communication 1:')
+        print('Encrypted message 1:')
         print(message)
 
     def getMessage6(self, mnum, message):
-        print('Encrypted communication 2:')
+        print('Encrypted message 2:')
         print(message)
 
     def connect_to_client(self):
@@ -87,17 +89,20 @@ while True:
         print('sending message 1')
         time.sleep(3)
         ap.cl.exposed_sendMessage1(ap.message, 'ANonce: 1235571')
+        print('message 1 sent')
         time.sleep(3)
     if(ap.message == 3):
         if (ap.m3sent == False):
             print('sending message 3')
             time.sleep(3)
             ap.cl.exposed_sendMessage3(ap.message, 'GTK: 8569285, MIAC: 5468778')
+            print('message 3 sent')
             time.sleep(3)
         else:
             print('sending message 3 again...')
             time.sleep(3)
             ap.cl.exposed_sendMessage3(ap.message, 'GTK: 8569285, MIAC: 5468778')
+            print('message 3 sent again....')
             time.sleep(3)
     if(ap.message == 4):
         pass

@@ -28,19 +28,19 @@ class CL:
     def getMessage1(self, mnum, message):
         self.m1 = message
         self.message = mnum
+        print('Recieved Message 1:')
         print(self.m1)
 
     def getMessage3(self, mnum, message):
         if (self.m3 == None):
             self.m3 = message
             self.message = mnum
+            print('Recieved Message 3:')
             print(self.m3)
         else:
-            print('reinstalling key')
             self.reset = True
     
     def getHijacked(self):
-        print('hijacked')
         self.apconn = rpyc.connect("localhost", 18814)
         self.ap = self.apconn.root
         self.ap.exposed_reqConnection()
@@ -82,26 +82,30 @@ while True:
         print('sending message 2')
         time.sleep(3)
         cl.ap.exposed_sendMessage2(cl.message, 'SNonce: 8737282, MIC: 7382888')
+        print('sent message 2')
         time.sleep(3)
     if(cl.message == 3):
         print('sending message 4')
         time.sleep(3)
         cl.ap.exposed_sendMessage4(cl.message, 'all good fam, handshake complete')
+        print('sent message 4')
         time.sleep(3)
         cl.message = 5
     if(cl.message == 5):
-        print('sending message 5')
+        print('sending encrypted message 1')
         time.sleep(3)
         cl.ap.exposed_sendMessage5(cl.message, 'c7041f44d10f1801d4e081c61dee4cbf32090d0f90f5420cc554')
+        print('sent encrypted message 1')
         time.sleep(3)
         cl.message = 6
     if(cl.message == 6):
-        print('sending message 6')
+        print('sending encrypted message 2')
         time.sleep(3)
         if (cl.reset == False):
             cl.ap.exposed_sendMessage6(cl.message, '3315ed233f9899c261290d436107a2b73dd834517c1540044f3c')
         else:
             cl.ap.exposed_sendMessage6(cl.message, 'c7041f44d10f1801cff98bc054e21fa43b05054adff40c55c744')
+        print('sent encrypted message 2')
         print('Communications done')
         break
     
