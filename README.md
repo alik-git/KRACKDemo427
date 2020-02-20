@@ -1,3 +1,3 @@
 # KRACKDemo427
 
-This is our demo material for our presentation on the KRACK attacks against WPA2 for CSC427
+A simulation of the Key Reinstallation Attack, allowing users to understand the exploit breaking WPA2 by forcing nonce reuse.
